@@ -1,29 +1,27 @@
 ﻿@page "/Jugadores/Index"
-
+@rendermode InteractiveServer
 @inject JugadoresService jugadoresService
 @inject NavigationManager navigationManager
 
 <PageTitle>Consulta de Jugadores</PageTitle>
 <div class="container">
     <div class="card shadow-lg">
-        <div class="card-header space-between">
-            <h5 class="card-title">Consulta de Jugadores</h5>
-            <a href="/Jugadores/Create" class="btn btn-success"> <span class="bi bi-plus-square mt-3"></span> Crear</a>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Consulta de Jugadores</h5>
+            <a href="/Jugadores/Create" class="btn btn-success"> <span class="bi bi-plus-square"></span> Crear</a>
         </div>
 
         <div class="card-body">
-
-            <div class="row">
+            <div class="row mb-2">
                 <div class="col-3">
                     <label class="col-form-label"><strong>Filtrar por</strong></label>
                 </div>
-
                 <div class="col-4">
                     <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
                 </div>
             </div>
 
-            <div class="row align-items-center">
+            <div class="row align-items-center mb-3">
                 <div class="col-3">
                     <InputSelect class="form-select" @bind-Value="Filtro">
                         <option value="" selected disabled>Elija una opci&oacute;n</option>
@@ -31,7 +29,6 @@
                         <option value="Partidas">Partidas</option>
                     </InputSelect>
                 </div>
-
                 <div class="col-4">
                     <div class="input-group">
                         <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
@@ -42,27 +39,23 @@
             </div>
 
             <table class="table table-hover mt-3">
-                <thead class="table  table-striped text-black">
+                <thead class="table table-striped text-black text-center">
                     <tr>
                         <th>JugadorId</th>
                         <th>Nombres</th>
                         <th>Partidas</th>
                         <th>Editar</th>
-                        <th>Eliminar</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
                     @foreach (var jugador in ListaJugadores)
                     {
                         <tr>
                             <td>@jugador.Idjugador</td>
                             <td>@jugador.Nombre</td>
                             <td>@jugador.Partidas</td>
-                            <td class="text-center">
+                            <td>
                                 <a href="/Jugadores/Edit/@jugador.Idjugador" class="btn btn-outline-primary bi bi-pencil-square"></a>
-                            </td>
-                            <td class="text-center">
-                                <button class="btn btn-outline-danger bi bi-trash" @onclick="() => Eliminar(jugador.Idjugador)"></button>
                             </td>
                         </tr>
                     }
@@ -73,9 +66,7 @@
 </div>
 
 @code {
-
     public List<Jugadores> ListaJugadores { get; set; } = new List<Jugadores>();
-
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
 
@@ -108,14 +99,5 @@
         ListaJugadores = await jugadoresService.Listar(j => j.Idjugador > 0);
         Filtro = string.Empty;
         ValorFiltro = string.Empty;
-    }
-
-    private async Task Eliminar(int jugadorId)
-    {
-        var eliminado = await jugadoresService.Eliminar(jugadorId);
-        if (eliminado)
-        {
-            ListaJugadores = await jugadoresService.Listar(j => j.Idjugador > 0);
-        }
     }
 }
