@@ -14,5 +14,8 @@ namespace RegistroJugadores.Models
         [Range(0, int.MaxValue, ErrorMessage = "El numero de partidas debe ser un valor valido. ")]
         public int Partidas { get; set; }
 
+      
     }
+
 }
+
