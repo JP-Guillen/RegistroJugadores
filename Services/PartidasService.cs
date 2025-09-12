@@ -71,10 +71,15 @@ namespace RegistroJugadores.Services
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
             return await contexto.partidas
+                .Include(p => p.Jugador1)
+                .Include(p => p.Jugador2)
+                .Include(p => p.Ganador)
+                .Include(p => p.TurnoJugador)
                 .Where(criterio)
                 .AsNoTracking()
                 .ToListAsync();
-        } 
+        }
+
 
     }
 }
