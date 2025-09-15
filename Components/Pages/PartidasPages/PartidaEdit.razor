@@ -158,6 +158,12 @@
 
     public async Task Modificar()
     {
+        if (Partida.Jugador1Id == Partida.Jugador2Id)
+        {
+            Mensaje = "Los jugadores no pueden ser el mismo.";
+            return;
+        }
+
         if (Partida.EstadoPartida != "Finalizada")
         {
             Partida.FechaFin = null;

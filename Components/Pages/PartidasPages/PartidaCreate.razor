@@ -133,6 +133,24 @@
 
     public async Task Guardar()
     {
+        if (Partida.Jugador1Id == 0 || Partida.Jugador2Id == 0)
+        {
+            Mensaje = "Debe seleccionar ambos jugadores.";
+            return;
+        }
+
+        if (Partida.Jugador1Id == Partida.Jugador2Id)
+        {
+            Mensaje = "Los jugadores no pueden ser el mismo.";
+            return;
+        }
+
+        if (Partida.TurnoJugadorId == 0)
+        {
+            Mensaje = "Debe seleccionar el turno de un jugador.";
+            return;
+        }
+
         if (Partida.EstadoPartida != "Finalizada")
         {
             Partida.FechaFin = null;
