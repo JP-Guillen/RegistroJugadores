@@ -56,7 +56,7 @@
                         <tr>
                             <td>@jugador.Idjugador</td>
                             <td>@jugador.Nombre</td>
-                            <td>@jugador.Partidas</td>
+                            <td>@jugador.Victorias</td>
                             <td>
                                 <a href="/Jugadores/Edit/@jugador.Idjugador" class="btn btn-outline-primary bi bi-pencil-square"></a>
                             </td>
@@ -88,7 +88,7 @@
             }
             else if (Filtro == "Partidas" && int.TryParse(ValorFiltro, out int partidas))
             {
-                ListaJugadores = await jugadoresService.Listar(j => j.Partidas == partidas);
+                ListaJugadores = await jugadoresService.Listar(j => j.Victorias == partidas);
             }
         }
         else
