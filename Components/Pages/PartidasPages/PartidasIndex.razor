@@ -64,10 +64,10 @@
                     {
                         <tr>
                             <td>@partida.PartidaId</td>
-                            <td>@partida.Jugador1?.Nombre</td>
-                            <td>@partida.Jugador2?.Nombre</td>
+                            <td>@partida.Jugador1?.Nombres</td>
+                            <td>@partida.Jugador2?.Nombres</td>
                             <td>@partida.EstadoPartida</td>
-                            <td>@partida.Ganador?.Nombre</td>
+                            <td>@partida.Ganador?.Nombres</td>
                             <td>@partida.FechaInicio.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@(partida.FechaFin.HasValue? partida.FechaFin.Value.ToString("dd/MM/yyyy HH:mm") : "-")</td>
                             <td>

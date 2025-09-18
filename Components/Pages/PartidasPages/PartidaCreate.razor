@@ -23,7 +23,7 @@
                         <option value="0">Seleccione un jugador</option>
                         @foreach (var jugador in ListaJugadores)
                         {
-                            <option value="@jugador.Idjugador">@jugador.Nombre</option>
+                            <option value="@jugador.JugadorId">@jugador.Nombres</option>
                         }
                     </InputSelect>
                     <ValidationMessage For="(() => Partida.Jugador1Id)" />
@@ -35,7 +35,7 @@
                         <option value="">Seleccione un jugador</option>
                         @foreach (var jugador in ListaJugadores)
                         {
-                            <option value="@jugador.Idjugador">@jugador.Nombre</option>
+                            <option value="@jugador.JugadorId">@jugador.Nombres</option>
                         }
                     </InputSelect>
                     <ValidationMessage For="(() => Partida.Jugador2Id)" />
@@ -60,7 +60,7 @@
                         <option value="">Seleccione un jugador</option>
                         @foreach (var jugador in ListaJugadores)
                         {
-                            <option value="@jugador.Idjugador">@jugador.Nombre</option>
+                            <option value="@jugador.JugadorId">@jugador.Nombres</option>
                         }
                     </InputSelect>
                 </div>
@@ -71,7 +71,7 @@
                         <option value="0">Seleccione un jugador</option>
                         @foreach (var jugador in ListaJugadores)
                         {
-                            <option value="@jugador.Idjugador">@jugador.Nombre</option>
+                            <option value="@jugador.JugadorId">@jugador.Nombres</option>
                         }
                     </InputSelect>
                     <ValidationMessage For="(() => Partida.TurnoJugadorId)" />

@@ -6,10 +6,10 @@ namespace RegistroJugadores.Models
     public class Jugadores
     {
         [Key]
-        public int Idjugador { get; set; }
+        public int JugadorId { get; set; }
 
         [Required(ErrorMessage = "El campo 'Nombres' es obligatorio.")]
-        public string Nombre { get; set; }
+        public string Nombres { get; set; }
 
         public int Victorias { get; set; } = 0;
 
@@ -18,7 +18,7 @@ namespace RegistroJugadores.Models
         public int Derrotas { get; set; } = 0;
 
         [InverseProperty(nameof(Models.Movimientos.Jugadores))]
-        public virtual ICollection<Movimientos> movimientos { get; set; } = new List<Movimientos>();
+        public virtual ICollection<Movimientos> Movimientos { get; set; } = new List<Movimientos>();
 
     }
 }

@@ -12,17 +12,17 @@ namespace RegistroJugadores.Services
         private async Task<bool> ExisteNombre(string nombres)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
-            return await contexto.Jugadores.AnyAsync(j => j.Nombre.ToLower().Trim().Equals(nombres.ToLower().Trim()));
+            return await contexto.Jugadores.AnyAsync(j => j.Nombres.ToLower().Trim().Equals(nombres.ToLower().Trim()));
         }
 
         public async Task <bool> Guardar(Jugadores jugador) {
 
-            if (await ExisteNombre(jugador.Nombre) && !await Existe(jugador.Idjugador))
+            if (await ExisteNombre(jugador.Nombres) && !await Existe(jugador.JugadorId))
             {
                 return false;
             }
 
-            if (!await Existe(jugador.Idjugador))
+            if (!await Existe(jugador.JugadorId))
             {
                 return await Insertar(jugador);
             }
@@ -37,7 +37,7 @@ namespace RegistroJugadores.Services
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
             return await contexto.Jugadores
-                .AnyAsync(j => j.Idjugador == jugadorId);
+                .AnyAsync(j => j.JugadorId == jugadorId);
 
         }
         private async Task<bool> Insertar(Jugadores jugador)
@@ -59,7 +59,7 @@ namespace RegistroJugadores.Services
         public async Task<Jugadores?> Buscar(int jugadorId)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
-            return await contexto.Jugadores.FirstOrDefaultAsync(j => j.Idjugador == jugadorId);
+            return await contexto.Jugadores.FirstOrDefaultAsync(j => j.JugadorId == jugadorId);
         }
 
         public async Task<bool> Eliminar(int jugadorId)
@@ -67,7 +67,7 @@ namespace RegistroJugadores.Services
             await using var contexto = await DbFactory.CreateDbContextAsync();
             return await contexto.Jugadores
                 .AsNoTracking()
-                .Where(j => j.Idjugador == jugadorId)
+                .Where(j => j.JugadorId == jugadorId)
                 .ExecuteDeleteAsync() > 0;
         }
 
