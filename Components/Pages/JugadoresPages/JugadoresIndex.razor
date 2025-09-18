@@ -1,7 +1,10 @@
 ﻿@page "/Jugadores/Index"
+@using Microsoft.EntityFrameworkCore
+@using RegistroJugadores.DAL
 @rendermode InteractiveServer
 @inject JugadoresService jugadoresService
 @inject NavigationManager navigationManager
+@inject IDbContextFactory<Contexto> DbFactory
 
 <PageTitle>Consulta de Jugadores</PageTitle>
 <div class="container">
@@ -53,7 +56,7 @@
                         <tr>
                             <td>@jugador.Idjugador</td>
                             <td>@jugador.Nombre</td>
-                            <td>@jugador.Partidas</td>
+                            <td>@jugador.Victorias</td>
                             <td>
                                 <a href="/Jugadores/Edit/@jugador.Idjugador" class="btn btn-outline-primary bi bi-pencil-square"></a>
                             </td>
@@ -85,7 +88,7 @@
             }
             else if (Filtro == "Partidas" && int.TryParse(ValorFiltro, out int partidas))
             {
-                ListaJugadores = await jugadoresService.Listar(j => j.Partidas == partidas);
+                ListaJugadores = await jugadoresService.Listar(j => j.Victorias == partidas);
             }
         }
         else
@@ -100,4 +103,12 @@
         Filtro = string.Empty;
         ValorFiltro = string.Empty;
     }
+
+    private async Task<bool> ExisteNombre(string nombre)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        return await contexto.Jugadores.AnyAsync(j => j.Nombre.ToLower().Trim() == nombre.ToLower().Trim());
+    }
+
+
 }

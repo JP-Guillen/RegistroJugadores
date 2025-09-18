@@ -7,8 +7,20 @@ namespace RegistroJugadores.Services
 {
     public class JugadoresService(IDbContextFactory<Contexto> DbFactory)
     {
-    
+
+
+        private async Task<bool> ExisteNombre(string nombres)
+        {
+            await using var contexto = await DbFactory.CreateDbContextAsync();
+            return await contexto.Jugadores.AnyAsync(j => j.Nombre.ToLower().Trim().Equals(nombres.ToLower().Trim()));
+        }
+
         public async Task <bool> Guardar(Jugadores jugador) {
+
+            if (await ExisteNombre(jugador.Nombre) && !await Existe(jugador.Idjugador))
+            {
+                return false;
+            }
 
             if (!await Existe(jugador.Idjugador))
             {
