@@ -11,6 +11,8 @@ namespace RegistroJugadores.DAL
 
         public DbSet<Partidas> partidas { get; set; }
 
+        public DbSet<Movimientos> movimientos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Partidas>()
