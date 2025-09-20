@@ -24,7 +24,7 @@
                         <option value="0">Seleccione un jugador</option>
                         @foreach (var jugador in ListaJugadores)
                         {
-                            <option value="@jugador.Idjugador">@jugador.Nombre</option>
+                            <option value="@jugador.JugadorId">@jugador.Nombres</option>
                         }
                     </InputSelect>
                     <ValidationMessage For="(() => Partida.Jugador1Id)" />
@@ -36,13 +36,13 @@
                         <option value="">Seleccione un jugador</option>
                         @foreach (var jugador in ListaJugadores)
                         {
-                            <option value="@jugador.Idjugador">@jugador.Nombre</option>
+                            <option value="@jugador.JugadorId">@jugador.Nombres</option>
                         }
                     </InputSelect>
                     <ValidationMessage For="(() => Partida.Jugador2Id)" />
                 </div>
 
-                <div class="mb-3">
+                @* <div class="mb-3">
                     <label class="form-label"><strong>Estado</strong></label>
                     <InputSelect class="form-select" @bind-Value="Partida.EstadoPartida">
                         <option value="">Seleccione estado</option>
@@ -51,9 +51,9 @@
                         <option value="En curso">En curso</option>
                     </InputSelect>
                     <ValidationMessage For="(() => Partida.EstadoPartida)" />
-                </div>
+                </div> *@
 
-                <div class="mb-3">
+               @*  <div class="mb-3">
                     <label class="form-label"><strong>Ganador</strong></label>
                     <InputSelect class="form-select"
                                  @bind-Value="Partida.GanadorId"
@@ -61,29 +61,29 @@
                         <option value="">Seleccione un jugador</option>
                         @foreach (var jugador in ListaJugadores)
                         {
-                            <option value="@jugador.Idjugador">@jugador.Nombre</option>
+                            <option value="@jugador.JugadorId">@jugador.Nombres</option>
                         }
                     </InputSelect>
-                </div>
+                </div> *@
 
-                <div class="mb-3">
+               @*  <div class="mb-3">
                     <label class="form-label"><strong>Turno Jugador</strong></label>
                     <InputSelect class="form-select" @bind-Value="Partida.TurnoJugadorId">
                         <option value="0">Seleccione un jugador</option>
                         @foreach (var jugador in ListaJugadores)
                         {
-                            <option value="@jugador.Idjugador">@jugador.Nombre</option>
+                            <option value="@jugador.JugadorId">@jugador.Nombres</option>
                         }
                     </InputSelect>
                     <ValidationMessage For="(() => Partida.TurnoJugadorId)" />
                 </div>
-
-                <div class="mb-3">
+ *@
+                @* <div class="mb-3">
                     <label class="form-label"><strong>Fecha Inicio</strong></label>
                     <InputDate class="form-control" @bind-Value="Partida.FechaInicio" />
-                </div>
+                </div> *@
 
-                <div class="mb-3">
+                @* <div class="mb-3">
                     <label class="form-label"><strong>Fecha Fin</strong></label>
                     @if (Partida.EstadoPartida == "Finalizada")
                     {
@@ -101,8 +101,8 @@
                     {
                         <input class="form-control" value="Seleccione estado" disabled />
                     }
-                </div>
-            </div>
+                </div>*@
+            </div> 
 
             <div class="card-footer text-center mt-2">
                 <a href="/Partidas/Index" class="btn btn-secondary">

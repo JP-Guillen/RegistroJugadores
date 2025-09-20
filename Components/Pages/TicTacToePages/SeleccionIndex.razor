@@ -1,0 +1,76 @@
+﻿@page "/Seleccion/Index"
+@inject JugadoresService jugadoresService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Seleccione los Jugadores</PageTitle>
+
+<div class="container mt-5">
+    <div class="card shadow-lg mx-auto" style="max-width: 600px;">
+        <div class="card-header text-center">
+            <h3>Seleccione los Jugadores</h3>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-12 mb-2">
+                    <label class="form-label"><strong>Jugador X</strong></label>
+                    <InputSelect class="form-select" @bind-Value="JugadorXId">
+                        <option value="">-- Seleccione --</option>
+                        @foreach (var jugador in ListaJugadores)
+                        {
+                            <option value="@jugador.JugadorId" disabled="@(jugador.JugadorId.ToString() == JugadorOId)">
+                                @jugador.Nombres
+                            </option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label"><strong>Jugador O</strong></label>
+                    <InputSelect class="form-select" @bind-Value="JugadorOId">
+                        <option value="">-- Seleccione --</option>
+                        @foreach (var jugador in ListaJugadores)
+                        {
+                            <option value="@jugador.JugadorId" disabled="@(jugador.JugadorId.ToString() == JugadorXId)">
+                                @jugador.Nombres
+                            </option>
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button class="btn btn-success btn-lg" @onclick="IniciarPartida" disabled="@(!PuedeIniciar)">
+                    Iniciar Partida
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<Jugadores> ListaJugadores { get; set; } = new List<Jugadores>();
+    public string JugadorXId { get; set; }
+    public string JugadorOId { get; set; } 
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaJugadores = await jugadoresService.Listar(j => j.JugadorId > 0);
+    }
+
+    private bool PuedeIniciar => !string.IsNullOrEmpty(JugadorXId)
+                                && !string.IsNullOrEmpty(JugadorOId)
+                                && JugadorXId != JugadorOId;
+
+    private void IniciarPartida()
+    {
+        var nombreX = ListaJugadores.FirstOrDefault(j => j.JugadorId.ToString() == JugadorXId)?.Nombres;
+        var nombreO = ListaJugadores.FirstOrDefault(j => j.JugadorId.ToString() == JugadorOId)?.Nombres;
+
+        var nombreXEncoded = Uri.EscapeDataString(nombreX ?? "JugadorX");
+        var nombreOEncoded = Uri.EscapeDataString(nombreO ?? "JugadorO");
+
+        navigationManager.NavigateTo($"/Gameboar/Index?jugadorX={nombreXEncoded}&jugadorO={nombreOEncoded}");
+    }
+
+}

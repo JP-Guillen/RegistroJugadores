@@ -56,6 +56,7 @@
                         <th>Ganador</th>
                         <th>Fecha Inicio</th>
                         <th>Fecha Fin</th>
+                        <th>Movimientos</th>
                         <th>Editar</th>
                     </tr>
                 </thead>
@@ -64,12 +65,30 @@
                     {
                         <tr>
                             <td>@partida.PartidaId</td>
-                            <td>@partida.Jugador1?.Nombre</td>
-                            <td>@partida.Jugador2?.Nombre</td>
+                            <td>@partida.Jugador1?.Nombres</td>
+                            <td>@partida.Jugador2?.Nombres</td>
                             <td>@partida.EstadoPartida</td>
-                            <td>@partida.Ganador?.Nombre</td>
+                            <td>@partida.Ganador?.Nombres</td>
                             <td>@partida.FechaInicio.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@(partida.FechaFin.HasValue? partida.FechaFin.Value.ToString("dd/MM/yyyy HH:mm") : "-")</td>
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(partida.EstadoTablero) && partida.EstadoTablero.Length == 9)
+                                {
+                                    var filas = new List<string>();
+                                    for (int i = 0; i < 3; i++)
+                                    {
+                                        var fila = partida.EstadoTablero
+                                        .Substring(i * 3, 3)
+                                        .Replace("-", " ");
+                                        filas.Add(fila);
+                                    }
+                                    @string.Join(" - ", filas)
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
                             <td>
                                 <a href="/Partidas/Edit/@partida.PartidaId" class="btn btn-outline-primary bi bi-pencil-square"></a>
                             </td>
@@ -77,6 +96,11 @@
                     }
                 </tbody>
             </table>
+        </div>
+
+        
+        <div class="card-footer text-star">
+            <small><strong>Total de partidas: @ListaPartidas.Count</strong></small>
         </div>
     </div>
 </div>

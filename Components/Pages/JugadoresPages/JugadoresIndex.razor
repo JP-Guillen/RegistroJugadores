@@ -1,17 +1,21 @@
 ﻿@page "/Jugadores/Index"
 @using Microsoft.EntityFrameworkCore
 @using RegistroJugadores.DAL
+@using RegistroJugadores.Models
 @rendermode InteractiveServer
 @inject JugadoresService jugadoresService
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<Contexto> DbFactory
 
 <PageTitle>Consulta de Jugadores</PageTitle>
+
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">Consulta de Jugadores</h5>
-            <a href="/Jugadores/Create" class="btn btn-success"> <span class="bi bi-plus-square"></span> Crear</a>
+            <a href="/Jugadores/Create" class="btn btn-success">
+                <span class="bi bi-plus-square"></span> Crear
+            </a>
         </div>
 
         <div class="card-body">
@@ -20,23 +24,27 @@
                     <label class="col-form-label"><strong>Filtrar por</strong></label>
                 </div>
                 <div class="col-4">
-                    <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
+                    <label class="col-form-label"><strong>Búsqueda</strong></label>
                 </div>
             </div>
 
             <div class="row align-items-center mb-3">
                 <div class="col-3">
                     <InputSelect class="form-select" @bind-Value="Filtro">
-                        <option value="" selected disabled>Elija una opci&oacute;n</option>
-                        <option value="Nombre">Nombre</option>
-                        <option value="Partidas">Partidas</option>
+                        <option value="" selected disabled>Elija una opción</option>
+                        <option value="Nombres">Nombres</option>
+                        <option value="Victorias">Victorias</option>
+                        <option value="Empates">Empates</option>
+                        <option value="Derrotas">Derrotas</option>
                     </InputSelect>
                 </div>
                 <div class="col-4">
                     <div class="input-group">
                         <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
                         <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar"></button>
-                        <button type="button" class="btn btn-outline-secondary ms-1" @onclick="Restablecer"><i class="bi bi-arrow-clockwise"></i></button>
+                        <button type="button" class="btn btn-outline-secondary ms-1" @onclick="Restablecer">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -46,7 +54,9 @@
                     <tr>
                         <th>JugadorId</th>
                         <th>Nombres</th>
-                        <th>Partidas</th>
+                        <th>Victorias</th>
+                        <th>Empates</th>
+                        <th>Derrotas</th>
                         <th>Editar</th>
                     </tr>
                 </thead>
@@ -54,16 +64,23 @@
                     @foreach (var jugador in ListaJugadores)
                     {
                         <tr>
-                            <td>@jugador.Idjugador</td>
-                            <td>@jugador.Nombre</td>
+                            <td>@jugador.JugadorId</td>
+                            <td>@jugador.Nombres</td>
                             <td>@jugador.Victorias</td>
+                            <td>@jugador.Empates</td>
+                            <td>@jugador.Derrotas</td>
                             <td>
-                                <a href="/Jugadores/Edit/@jugador.Idjugador" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                                <a href="/Jugadores/Edit/@jugador.JugadorId" class="btn btn-outline-primary bi bi-pencil-square"></a>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
+        </div>
+
+       
+        <div class="card-footer text-start">
+            <small><strong>Total de jugadores: @ListaJugadores.Count</strong></small>
         </div>
     </div>
 </div>
@@ -75,31 +92,41 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ListaJugadores = await jugadoresService.Listar(j => j.Idjugador > 0);
+        ListaJugadores = await jugadoresService.Listar(j => j.JugadorId > 0);
     }
 
     private async Task Buscar()
     {
         if (!string.IsNullOrWhiteSpace(ValorFiltro))
         {
-            if (Filtro == "Nombre")
+            switch (Filtro)
             {
-                ListaJugadores = await jugadoresService.Listar(j => j.Nombre.ToLower().Contains(ValorFiltro.ToLower()));
-            }
-            else if (Filtro == "Partidas" && int.TryParse(ValorFiltro, out int partidas))
-            {
-                ListaJugadores = await jugadoresService.Listar(j => j.Victorias == partidas);
+                case "Nombres":
+                    ListaJugadores = await jugadoresService.Listar(j => j.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
+                    break;
+                case "Victorias":
+                    if (int.TryParse(ValorFiltro, out int victorias))
+                        ListaJugadores = await jugadoresService.Listar(j => j.Victorias == victorias);
+                    break;
+                case "Empates":
+                    if (int.TryParse(ValorFiltro, out int empates))
+                        ListaJugadores = await jugadoresService.Listar(j => j.Empates == empates);
+                    break;
+                case "Derrotas":
+                    if (int.TryParse(ValorFiltro, out int derrotas))
+                        ListaJugadores = await jugadoresService.Listar(j => j.Derrotas == derrotas);
+                    break;
             }
         }
         else
         {
-            ListaJugadores = await jugadoresService.Listar(j => j.Idjugador > 0);
+            ListaJugadores = await jugadoresService.Listar(j => j.JugadorId > 0);
         }
     }
 
     private async Task Restablecer()
     {
-        ListaJugadores = await jugadoresService.Listar(j => j.Idjugador > 0);
+        ListaJugadores = await jugadoresService.Listar(j => j.JugadorId > 0);
         Filtro = string.Empty;
         ValorFiltro = string.Empty;
     }
@@ -107,8 +134,6 @@
     private async Task<bool> ExisteNombre(string nombre)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Jugadores.AnyAsync(j => j.Nombre.ToLower().Trim() == nombre.ToLower().Trim());
+        return await contexto.Jugadores.AnyAsync(j => j.Nombres.ToLower().Trim() == nombre.ToLower().Trim());
     }
-
-
 }

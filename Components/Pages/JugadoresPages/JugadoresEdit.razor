@@ -19,15 +19,15 @@
             <div class="card-body">
                 <div class="mb-3">
                     <label class="form-label"><strong>Nombre</strong></label>
-                    <InputText class="form-control" @bind-Value="Jugador.Nombre"></InputText>
-                    <ValidationMessage For="(() => Jugador.Nombre)" />
+                    <InputText class="form-control" @bind-Value="Jugador.Nombres"></InputText>
+                    <ValidationMessage For="(() => Jugador.Nombres)" />
                 </div>
 
-                <div class="mb-3">
+               @* <div class="mb-3">
                     <label class="form-label"><strong>Partidas</strong></label>
                     <InputNumber class="form-control" @bind-Value="Jugador.Victorias"></InputNumber>
                     <ValidationMessage For="(() => Jugador.Victorias)" />
-                </div>
+                </div> *@
             </div>
 
             <div class="card-footer text-center mt-2">
@@ -93,7 +93,7 @@
 
     private async Task ConfirmarEliminar()
     {
-        var eliminado = await jugadoresService.Eliminar(Jugador.Idjugador);
+        var eliminado = await jugadoresService.Eliminar(Jugador.JugadorId);
 
         if (eliminado)
         {

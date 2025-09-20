@@ -24,11 +24,11 @@ namespace RegistroJugadores.Migrations
 
             modelBuilder.Entity("RegistroJugadores.Models.Jugadores", b =>
                 {
-                    b.Property<int>("Idjugador")
+                    b.Property<int>("JugadorId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Idjugador"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("JugadorId"));
 
                     b.Property<int>("Derrotas")
                         .HasColumnType("int");
@@ -36,16 +36,48 @@ namespace RegistroJugadores.Migrations
                     b.Property<int>("Empates")
                         .HasColumnType("int");
 
-                    b.Property<string>("Nombre")
+                    b.Property<string>("Nombres")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Victorias")
                         .HasColumnType("int");
 
-                    b.HasKey("Idjugador");
+                    b.HasKey("JugadorId");
 
                     b.ToTable("Jugadores");
+                });
+
+            modelBuilder.Entity("RegistroJugadores.Models.Movimientos", b =>
+                {
+                    b.Property<int>("MovimientoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MovimientoId"));
+
+                    b.Property<DateTime>("FechaMoviemiento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("JugadorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PartidaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PosicionColumna")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PosicionFila")
+                        .HasColumnType("int");
+
+                    b.HasKey("MovimientoId");
+
+                    b.HasIndex("JugadorId");
+
+                    b.HasIndex("PartidaId");
+
+                    b.ToTable("Movimientos");
                 });
 
             modelBuilder.Entity("RegistroJugadores.Models.Partidas", b =>
@@ -60,6 +92,11 @@ namespace RegistroJugadores.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("EstadoTablero")
+                        .IsRequired()
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
 
                     b.Property<DateTime?>("FechaFin")
                         .HasColumnType("datetime2");
@@ -90,6 +127,25 @@ namespace RegistroJugadores.Migrations
                     b.HasIndex("TurnoJugadorId");
 
                     b.ToTable("partidas");
+                });
+
+            modelBuilder.Entity("RegistroJugadores.Models.Movimientos", b =>
+                {
+                    b.HasOne("RegistroJugadores.Models.Jugadores", "Jugadores")
+                        .WithMany("Movimientos")
+                        .HasForeignKey("JugadorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RegistroJugadores.Models.Partidas", "Partidas")
+                        .WithMany()
+                        .HasForeignKey("PartidaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Jugadores");
+
+                    b.Navigation("Partidas");
                 });
 
             modelBuilder.Entity("RegistroJugadores.Models.Partidas", b =>
@@ -123,6 +179,11 @@ namespace RegistroJugadores.Migrations
                     b.Navigation("Jugador2");
 
                     b.Navigation("TurnoJugador");
+                });
+
+            modelBuilder.Entity("RegistroJugadores.Models.Jugadores", b =>
+                {
+                    b.Navigation("Movimientos");
                 });
 #pragma warning restore 612, 618
         }
