@@ -22,14 +22,12 @@
                     <ValidationMessage For="(() => Jugador.Nombres)" />
                 </div>
 
-               @*
-               Agregar Cantidad de partidas.    
-               <div class="mb-3">
-                    <label class="form-label"><strong>Partidas</strong></label>
-                    <InputNumber class="form-control" @bind-Value="Jugador.Victorias"></InputNumber>
-                    <ValidationMessage For="(() => Jugador.Victorias)" />
-                </div>*@
-
+                @if (!string.IsNullOrEmpty(Mensaje))
+                {
+                    <div class="alert @AlertaClase text-center" role="alert">
+                        @Mensaje
+                    </div>
+                }
             </div>
 
             <div class="card-footer text-center mt-2">
@@ -41,11 +39,11 @@
         </div>
     </div>
 </EditForm>
-@Mensaje
 
 @code {
     public Jugadores Jugador { get; set; } = new Jugadores();
     public string Mensaje { get; set; } = string.Empty;
+    public string AlertaClase { get; set; } = "alert-danger";
 
     public async Task Guardar()
     {
@@ -53,11 +51,20 @@
 
         if (creado)
         {
+            Mensaje = "Jugador Creado";
+            AlertaClase = "alert-success";
+
+            StateHasChanged();
+
+            await Task.Delay(1000);
+
             navigationManager.NavigateTo("/Jugadores/Index");
         }
         else
         {
             Mensaje = "No se pudo guardar el jugador";
+            AlertaClase = "alert-danger";
+            StateHasChanged();
         }
     }
 }
