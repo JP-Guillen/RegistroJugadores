@@ -1,0 +1,150 @@
+﻿@page "/Gameboar/Index"
+@using RegistroJugadoreWebAssembly.Models.ApiDtos
+@using RegistroJugadoresWebAssembly.Shared;
+@using RegistroJugadoreWebAssembly.Services
+@inject IMovimientosApiService MovimientosApi
+@inject IPartidasApiservices PartidasApi
+@inject NavigationManager Nav
+
+<h3 class="text-center mb-3">Tic Tac Toe</h3>
+
+<h5 class="text-center text-muted">
+    Partida ID: <strong>@partidaId</strong> — Tú eres <strong>@(jugador?.ToUpper())</strong>
+</h5>
+
+@if (esperandoOponente)
+{
+    <div class="alert alert-warning text-center">
+        Esperando que se una <strong>Jugador O</strong>...
+        <div class="small text-muted">El juego se habilitará automáticamente al unirse.</div>
+    </div>
+}
+
+<div class="game-board" style="display:grid;grid-template-columns:repeat(3,80px);gap:8px;justify-content:center;">
+    @for (var i = 0; i < 9; i++)
+    {
+        var index = i;
+        <button style="width:80px;height:80px;font-size:2rem;"
+                @onclick="() => HandleCellClick(index)"
+                disabled="@(board[index] != null || winner != null || esEmpate || !EsMiTurno || esperandoOponente)">
+            @board[index]?.ToString()
+        </button>
+    }
+</div>
+
+<h4 class="mt-3 text-center">@GameStatus</h4>
+
+<button class="btn btn-secondary mt-4" @onclick="RestartGame">Reiniciar</button>
+
+@code {
+    private enum PlayerType { X, O }
+
+    [Parameter][SupplyParameterFromQuery] public int partidaId { get; set; }
+    [Parameter][SupplyParameterFromQuery] public string jugador { get; set; } = "X";
+
+    private PlayerType?[] board = new PlayerType?[9];
+    private PlayerType _currentPlayerType = PlayerType.X;
+    private PlayerType? winner;
+    private bool esEmpate;
+    private bool esperandoOponente = true;
+    private System.Timers.Timer? timer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await VerificarEstadoPartida();
+        await SincronizarDesdeApi();
+
+        timer = new System.Timers.Timer(1200);
+        timer.Elapsed += async (_, __) => await InvokeAsync(async () =>
+        {
+            await VerificarEstadoPartida();
+            await SincronizarDesdeApi();
+        });
+        timer.AutoReset = true;
+        timer.Enabled = true;
+    }
+
+    private string GameStatus =>
+        esperandoOponente ? "⏳ Esperando Jugador O..."
+        : winner != null ? $"🏆 Ganó {(winner == PlayerType.X ? "Jugador X" : "Jugador O")}!"
+        : esEmpate ? "🤝 Empate"
+        : $"Turno de {(_currentPlayerType == PlayerType.X ? "Jugador X" : "Jugador O")}";
+
+    private async Task VerificarEstadoPartida()
+    {
+        var res = await PartidasApi.GetPartidaAsync(partidaId);
+        if (res is Resource<PartidaResponse>.Success ok)
+        {
+            esperandoOponente = ok.Data.Jugador2Id is null;
+            StateHasChanged();
+        }
+    }
+
+    private async Task SincronizarDesdeApi()
+    {
+        var res = await MovimientosApi.GetMovimientosAsync(partidaId);
+        if (res is not Resource<List<MovimientosResponse>>.Success ok) return;
+
+        var movimientos = ok.Data;
+        board = new PlayerType?[9];
+        foreach (var m in movimientos)
+        {
+            int idx = m.PosicionFila * 3 + m.PosicionColumna;
+            board[idx] = m.Jugador == "X" ? PlayerType.X : PlayerType.O;
+        }
+
+        _currentPlayerType = movimientos.Count == 0
+            ? PlayerType.X
+            : (movimientos.Last().Jugador == "X" ? PlayerType.O : PlayerType.X);
+
+        winner = CheckForWinner();
+        esEmpate = winner == null && board.All(c => c != null);
+        StateHasChanged();
+    }
+
+    private async Task HandleCellClick(int index)
+    {
+        if (board[index] != null || winner != null || esEmpate || !EsMiTurno || esperandoOponente) return;
+
+        var req = new MovimientosRequest
+        {
+            PartidaId = partidaId,
+            Jugador = (jugador ?? "X").ToUpper(),
+            PosicionFila = index / 3,
+            PosicionColumna = index % 3
+        };
+
+        var resp = await MovimientosApi.PostMovimientoAsync(req);
+        if (resp is Resource<bool>.Success)
+            await SincronizarDesdeApi();
+    }
+
+    private PlayerType? CheckForWinner()
+    {
+        var lines = new[] {
+            new[]{0,1,2}, new[]{3,4,5}, new[]{6,7,8},
+            new[]{0,3,6}, new[]{1,4,7}, new[]{2,5,8},
+            new[]{0,4,8}, new[]{2,4,6}
+        };
+        foreach (var l in lines)
+        {
+            if (board[l[0]].HasValue && board[l[0]] == board[l[1]] && board[l[0]] == board[l[2]])
+                return board[l[0]];
+        }
+        return null;
+    }
+
+    private bool EsMiTurno =>
+        !esperandoOponente && (
+            (_currentPlayerType == PlayerType.X && (jugador ?? "X").ToUpper() == "X") ||
+            (_currentPlayerType == PlayerType.O && (jugador ?? "X").ToUpper() == "O")
+        );
+
+    private void RestartGame()
+    {
+        board = new PlayerType?[9];
+        _currentPlayerType = PlayerType.X;
+        winner = null;
+        esEmpate = false;
+    }
+}
