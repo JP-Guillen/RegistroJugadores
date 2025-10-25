@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistroJugadores", "RegistroJugadores.csproj", "{849D9FBC-F004-46D2-BA37-CDE5508CF913}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistroJugadores", "RegistroJugadores\RegistroJugadores.csproj", "{8CF6038B-6C19-3317-2E81-1EBD5C6B8824}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistroJugadoreWebAssembly", "RegistroJugadoreWebAssembly\RegistroJugadoreWebAssembly.csproj", "{558E9012-874E-4E75-AD38-6DC48B59B5DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{849D9FBC-F004-46D2-BA37-CDE5508CF913}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{849D9FBC-F004-46D2-BA37-CDE5508CF913}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{849D9FBC-F004-46D2-BA37-CDE5508CF913}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{849D9FBC-F004-46D2-BA37-CDE5508CF913}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CF6038B-6C19-3317-2E81-1EBD5C6B8824}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CF6038B-6C19-3317-2E81-1EBD5C6B8824}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CF6038B-6C19-3317-2E81-1EBD5C6B8824}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CF6038B-6C19-3317-2E81-1EBD5C6B8824}.Release|Any CPU.Build.0 = Release|Any CPU
+		{558E9012-874E-4E75-AD38-6DC48B59B5DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{558E9012-874E-4E75-AD38-6DC48B59B5DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{558E9012-874E-4E75-AD38-6DC48B59B5DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{558E9012-874E-4E75-AD38-6DC48B59B5DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
