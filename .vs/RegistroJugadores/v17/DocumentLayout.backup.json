@@ -1,0 +1,117 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Aplicada1\\RegistroJugadores\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{558E9012-874E-4E75-AD38-6DC48B59B5DD}|RegistroJugadoreWebAssembly\\RegistroJugadoreWebAssembly.csproj|c:\\aplicada1\\registrojugadores\\registrojugadorewebassembly\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{558E9012-874E-4E75-AD38-6DC48B59B5DD}|RegistroJugadoreWebAssembly\\RegistroJugadoreWebAssembly.csproj|solutionrelative:registrojugadorewebassembly\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{558E9012-874E-4E75-AD38-6DC48B59B5DD}|RegistroJugadoreWebAssembly\\RegistroJugadoreWebAssembly.csproj|c:\\aplicada1\\registrojugadores\\registrojugadorewebassembly\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{558E9012-874E-4E75-AD38-6DC48B59B5DD}|RegistroJugadoreWebAssembly\\RegistroJugadoreWebAssembly.csproj|solutionrelative:registrojugadorewebassembly\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{558E9012-874E-4E75-AD38-6DC48B59B5DD}|RegistroJugadoreWebAssembly\\RegistroJugadoreWebAssembly.csproj|c:\\aplicada1\\registrojugadores\\registrojugadorewebassembly\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{558E9012-874E-4E75-AD38-6DC48B59B5DD}|RegistroJugadoreWebAssembly\\RegistroJugadoreWebAssembly.csproj|solutionrelative:registrojugadorewebassembly\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{558E9012-874E-4E75-AD38-6DC48B59B5DD}|RegistroJugadoreWebAssembly\\RegistroJugadoreWebAssembly.csproj|c:\\aplicada1\\registrojugadores\\registrojugadorewebassembly\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{558E9012-874E-4E75-AD38-6DC48B59B5DD}|RegistroJugadoreWebAssembly\\RegistroJugadoreWebAssembly.csproj|solutionrelative:registrojugadorewebassembly\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{558E9012-874E-4E75-AD38-6DC48B59B5DD}|RegistroJugadoreWebAssembly\\RegistroJugadoreWebAssembly.csproj|c:\\aplicada1\\registrojugadores\\registrojugadorewebassembly\\shared\\resource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{558E9012-874E-4E75-AD38-6DC48B59B5DD}|RegistroJugadoreWebAssembly\\RegistroJugadoreWebAssembly.csproj|solutionrelative:registrojugadorewebassembly\\shared\\resource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{558E9012-874E-4E75-AD38-6DC48B59B5DD}|RegistroJugadoreWebAssembly\\RegistroJugadoreWebAssembly.csproj|c:\\aplicada1\\registrojugadores\\registrojugadorewebassembly\\services\\movimientoapiservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{558E9012-874E-4E75-AD38-6DC48B59B5DD}|RegistroJugadoreWebAssembly\\RegistroJugadoreWebAssembly.csproj|solutionrelative:registrojugadorewebassembly\\services\\movimientoapiservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "bootstrap.bundle.js",
+              "DocumentMoniker": "C:\\Aplicada1\\RegistroJugadores\\RegistroJugadoreWebAssembly\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+              "RelativeDocumentMoniker": "RegistroJugadoreWebAssembly\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+              "ToolTip": "C:\\Aplicada1\\RegistroJugadores\\RegistroJugadoreWebAssembly\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+              "RelativeToolTip": "RegistroJugadoreWebAssembly\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-10-25T21:13:01.12Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "_Imports.razor",
+              "DocumentMoniker": "C:\\Aplicada1\\RegistroJugadores\\RegistroJugadoreWebAssembly\\_Imports.razor",
+              "RelativeDocumentMoniker": "RegistroJugadoreWebAssembly\\_Imports.razor",
+              "ToolTip": "C:\\Aplicada1\\RegistroJugadores\\RegistroJugadoreWebAssembly\\_Imports.razor",
+              "RelativeToolTip": "RegistroJugadoreWebAssembly\\_Imports.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-25T21:12:49.097Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "App.razor",
+              "DocumentMoniker": "C:\\Aplicada1\\RegistroJugadores\\RegistroJugadoreWebAssembly\\App.razor",
+              "RelativeDocumentMoniker": "RegistroJugadoreWebAssembly\\App.razor",
+              "ToolTip": "C:\\Aplicada1\\RegistroJugadores\\RegistroJugadoreWebAssembly\\App.razor",
+              "RelativeToolTip": "RegistroJugadoreWebAssembly\\App.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-25T21:12:12.229Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Resource.cs",
+              "DocumentMoniker": "C:\\Aplicada1\\RegistroJugadores\\RegistroJugadoreWebAssembly\\Shared\\Resource.cs",
+              "RelativeDocumentMoniker": "RegistroJugadoreWebAssembly\\Shared\\Resource.cs",
+              "ToolTip": "C:\\Aplicada1\\RegistroJugadores\\RegistroJugadoreWebAssembly\\Shared\\Resource.cs",
+              "RelativeToolTip": "RegistroJugadoreWebAssembly\\Shared\\Resource.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-25T21:09:47.932Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Aplicada1\\RegistroJugadores\\RegistroJugadoreWebAssembly\\Program.cs",
+              "RelativeDocumentMoniker": "RegistroJugadoreWebAssembly\\Program.cs",
+              "ToolTip": "C:\\Aplicada1\\RegistroJugadores\\RegistroJugadoreWebAssembly\\Program.cs",
+              "RelativeToolTip": "RegistroJugadoreWebAssembly\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-25T21:03:34.125Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MovimientoApiServices.cs",
+              "DocumentMoniker": "C:\\Aplicada1\\RegistroJugadores\\RegistroJugadoreWebAssembly\\Services\\MovimientoApiServices.cs",
+              "RelativeDocumentMoniker": "RegistroJugadoreWebAssembly\\Services\\MovimientoApiServices.cs",
+              "ToolTip": "C:\\Aplicada1\\RegistroJugadores\\RegistroJugadoreWebAssembly\\Services\\MovimientoApiServices.cs",
+              "RelativeToolTip": "RegistroJugadoreWebAssembly\\Services\\MovimientoApiServices.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAgwC0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-25T21:03:14.095Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

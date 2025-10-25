@@ -1,0 +1,126 @@
+﻿@page "/Seleccion/Index"
+@using RegistroJugadoreWebAssembly.Models.ApiDtos
+@using RegistroJugadoreWebAssembly.Services
+@using RegistroJugadoresWebAssembly.Shared
+@inject IPartidasApiservices PartidasApi
+@inject NavigationManager Nav
+
+<div class="container mt-5">
+    <div class="card shadow-lg mx-auto" style="max-width: 520px;">
+        <div class="card-header text-center">
+            <h3>Jugar</h3>
+        </div>
+        <div class="card-body">
+
+            <div class="d-grid gap-2 mb-3">
+                <button class="btn btn-success btn-lg" @onclick="IniciarPartida" disabled="@Cargando">
+                    @((Cargando && AccionActual == "iniciar") ? "Creando..." : "Iniciar partida (Jugador X)")
+                </button>
+            </div>
+
+            <hr />
+
+            <label class="form-label">Unirse a una partida por Id</label>
+            <div class="input-group mb-2">
+                <input class="form-control" type="number" @bind="PartidaId" placeholder="Id de la partida" />
+                <button class="btn btn-primary" @onclick="UnirsePorId" disabled="@(PartidaId <= 0 || Cargando)">
+                    @((Cargando && AccionActual == "unirse") ? "Uniendo..." : "Unirse (Jugador O)")
+                </button>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Mensaje))
+            {
+                <div class="alert alert-info mt-3">@Mensaje</div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Error))
+            {
+                <div class="alert alert-danger mt-3">@Error</div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private const int PLAYER_X_ID = 1;
+    private const int PLAYER_O_ID = 2;
+
+    private int PartidaId { get; set; }
+    private string Mensaje { get; set; } = "";
+    private string Error { get; set; } = "";
+    private bool Cargando { get; set; } = false;
+    private string AccionActual { get; set; } = "";
+
+    private async Task IniciarPartida()
+    {
+        Mensaje = ""; Error = ""; Cargando = true; AccionActual = "iniciar";
+        try
+        {
+            var res = await PartidasApi.PostPartida(PLAYER_X_ID, null);
+            if (res is Resource<PartidaResponse>.Success ok)
+            {
+                var id = ok.Data.PartidaId;
+                Nav.NavigateTo($"/Gameboar/Index?partidaId={id}&jugador=X", forceLoad: false);
+            }
+            else if (res is Resource<PartidaResponse>.Error err)
+            {
+                Error = $"No se pudo crear la partida: {err.Message}";
+            }
+            else
+            {
+                Error = "No se pudo crear la partida.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Error = $"Error inesperado al crear: {ex.Message}";
+        }
+        finally
+        {
+            Cargando = false; AccionActual = "";
+            StateHasChanged();
+        }
+    }
+
+    private async Task UnirsePorId()
+    {
+        Mensaje = ""; Error = ""; Cargando = true; AccionActual = "unirse";
+        try
+        {
+            var get = await PartidasApi.GetPartidaAsync(PartidaId);
+            if (get is not Resource<PartidaResponse>.Success ok)
+            {
+                Error = "No se encontró la partida.";
+                return;
+            }
+            if (ok.Data.Jugador2Id != null)
+            {
+                Error = "Esta partida ya tiene un Jugador O.";
+                return;
+            }
+
+            var join = await PartidasApi.UnirsePartidaViaPutAsync(PartidaId, PLAYER_O_ID);
+            if (join is Resource<bool>.Success)
+            {
+                Nav.NavigateTo($"/Gameboar/Index?partidaId={PartidaId}&jugador=O", forceLoad: false);
+            }
+            else if (join is Resource<bool>.Error jerr)
+            {
+                Error = $"No se pudo unir: {jerr.Message}";
+            }
+            else
+            {
+                Error = "No se pudo unir a la partida.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Error = $"Error inesperado al unirse: {ex.Message}";
+        }
+        finally
+        {
+            Cargando = false; AccionActual = "";
+            StateHasChanged();
+        }
+    }
+}
