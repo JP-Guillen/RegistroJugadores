@@ -1,15 +1,19 @@
 ﻿@page "/Seleccion/Index"
+@using RegistroJugadoresResource
+@using RegistroJugadores.Models.ApiDtos
 @inject JugadoresService jugadoresService
 @inject NavigationManager navigationManager
+@inject IPartidasApiservices partidasApiService
 @rendermode InteractiveServer
 
 <PageTitle>Seleccione los Jugadores</PageTitle>
 
 <div class="container mt-5">
     <div class="card shadow-lg mx-auto" style="max-width: 600px;">
-        <div class="card-header text-center">
+        @* <div class="card-header text-center">
             <h3>Seleccione los Jugadores</h3>
         </div>
+
         <div class="card-body">
             <div class="row mb-3">
                 <div class="col-12 mb-2">
@@ -37,21 +41,52 @@
                         }
                     </InputSelect>
                 </div>
-            </div>
+            </div> 
 
             <div class="text-center mt-4">
                 <button class="btn btn-success btn-lg" @onclick="IniciarPartida" disabled="@(!PuedeIniciar)">
                     Iniciar Partida
                 </button>
+            </div> 
+
+            <hr class="my-4" />*@
+
+
+		
+			<div class="card-header text-center">
+				<h1><strong>Unirse a una Partida</strong></h1>
+		    </div>
+            <div class="mt-4">
+                <div class="mb-3">
+                    <label class="form-label"> Ingrese el ID de la Partida: </label>
+                    <input class="form-control" @bind="PartidaIdBuscar" />
+                </div>
+
+                <div class="text-center">
+                    <button class="btn btn-primary me-2 btn-lg" @onclick="@(() => UnirsePartida("X"))" disabled="@string.IsNullOrEmpty(PartidaIdBuscar)">
+                        Unirse como X
+                    </button>
+                    <button class="btn btn-warning btn-lg" @onclick="@(() => UnirsePartida("O"))" disabled="@string.IsNullOrEmpty(PartidaIdBuscar)">
+                        Unirse como O
+                    </button>
+                </div>
+
+                @if (!string.IsNullOrEmpty(MensajeUnion))
+                {
+                    <div class="alert alert-info text-center mt-3">@MensajeUnion</div>
+                }
             </div>
-        </div>
     </div>
 </div>
 
+
 @code {
-    public List<Jugadores> ListaJugadores { get; set; } = new List<Jugadores>();
+    public List<Jugadores> ListaJugadores { get; set; } = new();
     public string JugadorXId { get; set; }
-    public string JugadorOId { get; set; } 
+    public string JugadorOId { get; set; }
+
+    public string PartidaIdBuscar { get; set; }
+    public string MensajeUnion { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -62,15 +97,49 @@
                                 && !string.IsNullOrEmpty(JugadorOId)
                                 && JugadorXId != JugadorOId;
 
-    private void IniciarPartida()
+    private async Task IniciarPartida()
     {
-        var nombreX = ListaJugadores.FirstOrDefault(j => j.JugadorId.ToString() == JugadorXId)?.Nombres;
-        var nombreO = ListaJugadores.FirstOrDefault(j => j.JugadorId.ToString() == JugadorOId)?.Nombres;
+        if (!int.TryParse(JugadorXId, out int jugador1Id) || !int.TryParse(JugadorOId, out int jugador2Id))
+        {
+            MensajeUnion = "Debe seleccionar ambos jugadores válidos.";
+            return;
+        }
 
-        var nombreXEncoded = Uri.EscapeDataString(nombreX ?? "JugadorX");
-        var nombreOEncoded = Uri.EscapeDataString(nombreO ?? "JugadorO");
+        var resultado = await partidasApiService.PostPartida(jugador1Id, jugador2Id);
 
-        navigationManager.NavigateTo($"/Gameboar/Index?jugadorX={nombreXEncoded}&jugadorO={nombreOEncoded}");
+        if (resultado is Resource<PartidaResponse>.Success ok)
+        {
+            var partida = ok.Data;
+            var nombreX = ListaJugadores.FirstOrDefault(j => j.JugadorId == jugador1Id)?.Nombres ?? "JugadorX";
+            var nombreO = ListaJugadores.FirstOrDefault(j => j.JugadorId == jugador2Id)?.Nombres ?? "JugadorO";
+
+            var nombreXEncoded = Uri.EscapeDataString(nombreX);
+            var nombreOEncoded = Uri.EscapeDataString(nombreO);
+
+            navigationManager.NavigateTo($"/Gameboar/Index?partidaId={partida.PartidaId}&jugadorX={nombreXEncoded}&jugadorO={nombreOEncoded}");
+        }
+        else if (resultado is Resource<PartidaResponse>.Error err)
+        {
+            MensajeUnion = $"Error al iniciar partida: {err.Message}";
+        }
     }
 
+    private async Task UnirsePartida(string simbolo)
+    {
+        if (!int.TryParse(PartidaIdBuscar, out int partidaId))
+        {
+            MensajeUnion = "Debe ingresar un ID de partida válido.";
+            return;
+        }
+
+        int jugadorId = simbolo == "X" ? 1 : 2;
+
+        var resultado = await partidasApiService.UnirsePartidaViaPutAsync(partidaId, jugadorId);
+
+        if (resultado is Resource<bool>.Success)
+        {
+            MensajeUnion = $"Te has unido correctamente como {simbolo} a la partida #{partidaId}.";
+            navigationManager.NavigateTo($"/Gameboar/Index?partidaId={partidaId}&simbolo={simbolo}");
+        }
+    }
 }
