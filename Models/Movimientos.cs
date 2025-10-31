@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RegistroJugadores.Models
-{
+namespace RegistroJugadores.Models;
+
     public class Movimientos
     {
         [Key]
@@ -23,4 +23,4 @@ namespace RegistroJugadores.Models
         [ForeignKey(nameof(JugadorId))]
         public virtual Jugadores Jugadores { get; set; }
     }
-}
+

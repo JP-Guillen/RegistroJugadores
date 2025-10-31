@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RegistroJugadores.Migrations
 {
     /// <inheritdoc />
-    public partial class AgregandoTodo : Migration
+    public partial class NuevaAPi : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,12 +15,12 @@ namespace RegistroJugadores.Migrations
                 name: "Jugadores",
                 columns: table => new
                 {
-                    JugadorId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombres = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Victorias = table.Column<int>(type: "int", nullable: false),
-                    Empates = table.Column<int>(type: "int", nullable: false),
-                    Derrotas = table.Column<int>(type: "int", nullable: false)
+                    JugadorId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Nombres = table.Column<string>(type: "TEXT", nullable: false),
+                    Victorias = table.Column<int>(type: "INTEGER", nullable: false),
+                    Empates = table.Column<int>(type: "INTEGER", nullable: false),
+                    Derrotas = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,16 +31,16 @@ namespace RegistroJugadores.Migrations
                 name: "partidas",
                 columns: table => new
                 {
-                    PartidaId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Jugador1Id = table.Column<int>(type: "int", nullable: false),
-                    Jugador2Id = table.Column<int>(type: "int", nullable: true),
-                    EstadoPartida = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    GanadorId = table.Column<int>(type: "int", nullable: true),
-                    TurnoJugadorId = table.Column<int>(type: "int", nullable: false),
-                    EstadoTablero = table.Column<string>(type: "nvarchar(9)", maxLength: 9, nullable: false),
-                    FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaFin = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    PartidaId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Jugador1Id = table.Column<int>(type: "INTEGER", nullable: false),
+                    Jugador2Id = table.Column<int>(type: "INTEGER", nullable: true),
+                    EstadoPartida = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
+                    GanadorId = table.Column<int>(type: "INTEGER", nullable: true),
+                    TurnoJugadorId = table.Column<int>(type: "INTEGER", nullable: false),
+                    EstadoTablero = table.Column<string>(type: "TEXT", maxLength: 9, nullable: false),
+                    FechaInicio = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    FechaFin = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -72,28 +72,28 @@ namespace RegistroJugadores.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Movimientos",
+                name: "movimientos",
                 columns: table => new
                 {
-                    MovimientoId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PartidaId = table.Column<int>(type: "int", nullable: false),
-                    JugadorId = table.Column<int>(type: "int", nullable: false),
-                    PosicionFila = table.Column<int>(type: "int", nullable: false),
-                    PosicionColumna = table.Column<int>(type: "int", nullable: false),
-                    FechaMoviemiento = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    MovimientoId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    PartidaId = table.Column<int>(type: "INTEGER", nullable: false),
+                    JugadorId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PosicionFila = table.Column<int>(type: "INTEGER", nullable: false),
+                    PosicionColumna = table.Column<int>(type: "INTEGER", nullable: false),
+                    FechaMoviemiento = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Movimientos", x => x.MovimientoId);
+                    table.PrimaryKey("PK_movimientos", x => x.MovimientoId);
                     table.ForeignKey(
-                        name: "FK_Movimientos_Jugadores_JugadorId",
+                        name: "FK_movimientos_Jugadores_JugadorId",
                         column: x => x.JugadorId,
                         principalTable: "Jugadores",
                         principalColumn: "JugadorId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Movimientos_partidas_PartidaId",
+                        name: "FK_movimientos_partidas_PartidaId",
                         column: x => x.PartidaId,
                         principalTable: "partidas",
                         principalColumn: "PartidaId",
@@ -101,13 +101,13 @@ namespace RegistroJugadores.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Movimientos_JugadorId",
-                table: "Movimientos",
+                name: "IX_movimientos_JugadorId",
+                table: "movimientos",
                 column: "JugadorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Movimientos_PartidaId",
-                table: "Movimientos",
+                name: "IX_movimientos_PartidaId",
+                table: "movimientos",
                 column: "PartidaId");
 
             migrationBuilder.CreateIndex(
@@ -135,7 +135,7 @@ namespace RegistroJugadores.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Movimientos");
+                name: "movimientos");
 
             migrationBuilder.DropTable(
                 name: "partidas");

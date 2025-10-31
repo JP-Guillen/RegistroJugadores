@@ -1,12 +1,13 @@
 ﻿@page "/Gameboar/Index"
 @using Microsoft.EntityFrameworkCore
 @using RegistroJugadores.DAL
-@inject MovimientosService movimientosService
+@using RegistroJugadoresResource
+@using RegistroJugadores.Models.ApiDtos;
 @inject NavigationManager navigationManager
 @inject IDbContextFactory<Contexto> DbFactory
+@inject IMovimientosApiService movimientosApiService
 @rendermode InteractiveServer
 
-<!-- PANTALLA DE JUEGO -->
 <div class="game-screen">
     <h2 class="game-status">@GameStatus</h2>
 
@@ -30,154 +31,114 @@
 @code {
     private enum PlayerType { X, O }
 
-    private bool gameStarted;
-    private PlayerType? playerTypeSelection;
     private PlayerType?[] board = new PlayerType?[9];
     private PlayerType _currentPlayerType = PlayerType.X;
     private PlayerType? winner;
     private bool esEmpate;
 
+    private System.Timers.Timer? _timer;
 
     [Parameter]
     [SupplyParameterFromQuery]
-    public string jugadorX { get; set; }
+    public int partidaId { get; set; }
 
     [Parameter]
     [SupplyParameterFromQuery]
-    public string jugadorO { get; set; }
-
-
-    private string NombreJugadorActual =>
-        _currentPlayerType == PlayerType.X ? jugadorX : jugadorO;
-
+    public string simbolo { get; set; }
 
     private string GameStatus
     {
         get
         {
             if (winner != null)
-            {
-                var nombreGanador = winner == PlayerType.X ? jugadorX : jugadorO;
-                return $"🏆 ¡Ganador: {nombreGanador}!";
-            }
-
-            return esEmpate
-                ? "🤝 ¡Es un empate!"
-                : $"Turno de: {NombreJugadorActual}";
+                return $"🏆 ¡Ganó {winner}!";
+            if (esEmpate)
+                return "🤝 ¡Empate!";
+            return $"Turno de: {_currentPlayerType}";
         }
     }
 
-    private void SelectPlayerType(PlayerType playerType)
+    protected override async Task OnInitializedAsync()
     {
-        playerTypeSelection = playerType;
-        StateHasChanged();
-    }
-
-    private void SelectPlayerX()
-    {
-        playerTypeSelection = PlayerType.X;
-    }
-
-    private void StartGame()
-    {
-        if (playerTypeSelection.HasValue)
+        if (partidaId > 0)
         {
-            gameStarted = true;
+            await CargarMovimientosDesdeApi();
+            _timer = new System.Timers.Timer(2000);
+            _timer.Elapsed += async (_, _) => await ActualizarTableroPeriodicamente();
+            _timer.AutoReset = true;
+            _timer.Enabled = true;
         }
     }
 
-    private async Task ActualizarResultado()
+    private async Task CargarMovimientosDesdeApi()
     {
-        await using var contexto = await DbFactory.CreateDbContextAsync();
-
-        var jugadorXEntity = await contexto.Jugadores.FirstOrDefaultAsync(j => j.Nombres == jugadorX);
-        var jugadorOEntity = await contexto.Jugadores.FirstOrDefaultAsync(j => j.Nombres == jugadorO);
-
-        if (jugadorXEntity != null && jugadorOEntity != null)
+        try
         {
-            if (winner == PlayerType.X)
-            {
-                jugadorXEntity.Victorias++;
-                jugadorOEntity.Derrotas++;
-            }
-            else if (winner == PlayerType.O)
-            {
-                jugadorOEntity.Victorias++;
-                jugadorXEntity.Derrotas++;
-            }
-            else if (esEmpate)
-            {
-                jugadorXEntity.Empates++;
-                jugadorOEntity.Empates++;
-            }
+            var result = await movimientosApiService.GetMovimientosAsync(partidaId);
 
-            await contexto.SaveChangesAsync();
+            if (result is Resource<List<MovimientosResponse>>.Success ok)
+            {
+                var movimientos = ok.Data;
+
+                // limpiar tablero
+                board = new PlayerType?[9];
+
+                // pintar jugadas desde la API
+                foreach (var mov in movimientos)
+                {
+                    int index = (mov.PosicionFila * 3) + mov.PosicionColumna;
+                    if (index >= 0 && index < 9)
+                        board[index] = mov.Jugador == "X" ? PlayerType.X : PlayerType.O;
+                }
+
+                _currentPlayerType = movimientos.Count % 2 == 0 ? PlayerType.X : PlayerType.O;
+
+                winner = CheckForWinner();
+                esEmpate = !winner.HasValue && board.All(cell => cell != null);
+
+                await InvokeAsync(StateHasChanged);
+            }
+            else if (result is Resource<List<MovimientosResponse>>.Error err)
+            {
+                Console.WriteLine($"Error al cargar movimientos: {err.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar movimientos desde la API: {ex.Message}");
         }
     }
 
-    private async Task RegistrarPartida()
+
+    private async Task ActualizarTableroPeriodicamente()
     {
-        await using var contexto = await DbFactory.CreateDbContextAsync();
-
-        var jugadorXEntity = await contexto.Jugadores.FirstOrDefaultAsync(j => j.Nombres == jugadorX);
-        var jugadorOEntity = await contexto.Jugadores.FirstOrDefaultAsync(j => j.Nombres == jugadorO);
-
-        if (jugadorXEntity == null || jugadorOEntity == null) return;
-
-        var partida = new Partidas
-        {
-            Jugador1Id = jugadorXEntity.JugadorId,
-            Jugador2Id = jugadorOEntity.JugadorId,
-            GanadorId = winner switch
-            {
-                PlayerType.X => jugadorXEntity.JugadorId,
-                PlayerType.O => jugadorOEntity.JugadorId,
-                _ => null
-            },
-            EstadoPartida = winner != null ? "Finalizada" : esEmpate ? "Empate" : "Incompleta",
-            TurnoJugadorId = _currentPlayerType == PlayerType.X ? jugadorXEntity.JugadorId : jugadorOEntity.JugadorId,
-            EstadoTablero = string.Join("", board.Select(cell => cell?.ToString() ?? "-")),
-            FechaInicio = DateTime.UtcNow,
-            FechaFin = DateTime.UtcNow
-        };
-
-        contexto.partidas.Add(partida);
-        await contexto.SaveChangesAsync();
+        await CargarMovimientosDesdeApi();
     }
-
-
-
-
 
     private async Task HandleCellClick(int index)
     {
         if (board[index] != null || winner != null || esEmpate)
-        {
             return;
-        }
 
-        board[index] = _currentPlayerType;
-
-        winner = CheckForWinner();
-        if (winner != null)
-        {
-            await RegistrarPartida();
-            await ActualizarResultado();
+            if ((_currentPlayerType == PlayerType.X && simbolo != "X") ||
+            (_currentPlayerType == PlayerType.O && simbolo != "O"))
             return;
-        }
 
-        esEmpate = board.All(cell => cell != null);
-        if (esEmpate)
+            var fila = index / 3;
+        var columna = index % 3;
+
+        var request = new RegistroJugadores.Models.ApiDtos.MovimientosRequest
         {
-            await RegistrarPartida();
-            await ActualizarResultado();
-            return;
-        }
+            PartidaId = partidaId,
+            Jugador = simbolo,
+            PosicionFila = fila,
+            PosicionColumna = columna
+        };
 
+            await movimientosApiService.PostMovimientoAsync(request);
 
-        _currentPlayerType = (_currentPlayerType == PlayerType.X)
-            ? PlayerType.O
-            : PlayerType.X;
+    
+        await CargarMovimientosDesdeApi();
     }
 
     private PlayerType? CheckForWinner()
@@ -193,9 +154,7 @@
         {
             var (a, b, c) = (line[0], line[1], line[2]);
             if (board[a].HasValue && board[a] == board[b] && board[a] == board[c])
-            {
                 return board[a];
-            }
         }
 
         return null;
@@ -203,8 +162,6 @@
 
     private void RestartGame()
     {
-        gameStarted = false;
-        playerTypeSelection = null;
         board = new PlayerType?[9];
         _currentPlayerType = PlayerType.X;
         winner = null;
@@ -217,5 +174,8 @@
         return player == PlayerType.X ? "player-x" : "player-o";
     }
 
-
+    public void Dispose()
+    {
+        _timer?.Dispose();
+    }
 }
